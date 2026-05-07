@@ -1,26 +1,26 @@
 - hosts: web
   remote_user: root
-  become: true
+  become: yes
   tasks:
     - name: "Updating and upgrading packages on the Server"
       shell:
-        cmd: sudo yum update -y && sudo yum upgrade -y;
+        cmd: yum update -y && yum upgrade -y;
 
     - name: "Installing Terraform, output stored on terraform-version.txt"
       shell:
         cmd: |
-          sudo yum install -y yum-utils shadow-utils;
-          sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo;
-          sudo yum install terraform -y;
+          yum install -y yum-utils shadow-utils;
+          yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo;
+          yum install terraform -y;
           terraform --version > /home/ec2-user/terraform-version.txt;
 
     - name: "Install, start and enable Docker"
       shell:
         cmd: |
-          sudo yum install -y docker;
-          sudo gpasswd -a $USER docker;
-          sudo systemctl start docker;
-          sudo systemctl enable docker;
+          yum install -y docker;
+          gpasswd -a $USER docker;
+          systemctl start docker;
+          systemctl enable docker;
 
     - name: "Running hello-world image on docker, output stored on docker-out.txt"
       shell:
@@ -30,12 +30,12 @@
     - name: "Install, start and enable Jenkins"
       shell:
         cmd: |
-          sudo yum update -y;
-          sudo wget -O /etc/yum.repos.d/jenkins.repo \
+          yum update -y;
+          wget -O /etc/yum.repos.d/jenkins.repo \
             https://pkg.jenkins.io/rpm-stable/jenkins.repo;
-          sudo rpm --import https://pkg.jenkins.io/rpm-stable/jenkins.io-2026.key;
-          sudo yum upgrade -y;
-          sudo yum install java-21-amazon-corretto -y;
-          sudo yum install jenkins -y;
-          sudo systemctl enable jenkins;
-          sudo systemctl start jenkins;
+          rpm --import https://pkg.jenkins.io/rpm-stable/jenkins.io-2026.key;
+          yum upgrade -y;
+          yum install java-21-amazon-corretto -y;
+          yum install jenkins -y;
+          systemctl enable jenkins;
+          systemctl start jenkins;
